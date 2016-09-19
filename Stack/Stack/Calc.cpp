@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	in.open("tests.txt");
 
 	if(in.fail()) {
-		cout << "\nError while opening the file, cannot continue.\n";
+		cout << "\nError while opening the file, cannot continue.";
 		cout << "\nApplication terminating...";
 		system("PAUSE");
 		return 1;
