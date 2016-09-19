@@ -58,5 +58,5 @@ template <class Item>
 Item Stack<Item>::top() const
 {
 	assert(!empty());
-	return data[used - 1]
+	return data[used - 1];
 }
