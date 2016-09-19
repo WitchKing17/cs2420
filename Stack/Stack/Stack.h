@@ -10,6 +10,7 @@
 //		370-371.
 
 #include <cstdlib>
+#include <cassert>
 
 template <class Item>
 class Stack
@@ -36,3 +37,26 @@ private:
 	Item data[CAPACITY];
 	size_type used;
 };
+
+template <class Item>
+const typename Stack<Item>::size_type Stack<Item>::CAPACITY;
+
+template <class Item>
+void Stack<Item>::push(const Item& entry)
+{
+	assert(size() < CAPACITY);
+}
+
+template <class Item>
+void Stack<Item>::pop()
+{
+	assert(!empty());
+	--used;
+}
+
+template <class Item>
+Item Stack<Item>::top() const
+{
+	assert(!empty());
+	return data[used - 1];
+}
