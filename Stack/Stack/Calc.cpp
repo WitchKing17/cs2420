@@ -13,19 +13,27 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
-	Stack<double> theStack;
-	fstream in;
-	in.open("tests.txt");
+void process_file(char*);
 
-	if(in.fail()) {
+int main(int argc, char **argv) {
+	if (argc != 2) {
+		cerr << "Usage: " << argv[0] << " FILE" << endl;
+	}
+
+	Stack<double> theStack;
+
+	process_file(argv[1]);
+	//fstream in;
+	//in.open("tests.txt");
+
+	/*if(in.fail()) {
 		cout << "\nError while opening the file, cannot continue.\n";
 		cout << "\nApplication terminating...";
 		system("PAUSE");
 		return 1;
-	}
+	}*/
 
-	while(in) {
+	//while(in) {
 		// if (the next input is a left parenthesis)
 			// Read the left parenthesis and push it onto the stack
 		// else if (the next input is a number or other operand)
@@ -47,10 +55,22 @@ int main(int argc, char **argv) {
 			// if (no left parenthesis is encountered)
 				// Print an error message indicating unbalanced parenthesis, and halt). 
 			// Pop the left parenthesis
-	}
+	//}
 
-	in.close();
+	//in.close();
 
 	system("PAUSE");
 	return 0;
+}
+
+void process_file(char* theFile) {
+	ifstream in;
+	in.open(theFile);
+
+	if(in.fail()) {
+		cout << "\nError while opening the file, cannot continue.\n";
+		cout << "\nApplication terminating...";
+		in.close();
+	} else
+		cout << "YAYYYY" << endl;
 }
