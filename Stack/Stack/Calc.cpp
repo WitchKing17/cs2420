@@ -14,29 +14,38 @@
 using namespace std;
 
 int main(int argc, char **argv) {
+	//If we want to use this on the command line, this if statement helps us with that
 	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << " FILE" << endl;
 		return EXIT_FAILURE;
 	}
 
-	Stack<double> theStack;
+	//Declare the variables we need for the program //
+	Stack<int> numbers;
+	Stack<char> characters;
+	int num;
+	char symbol;
 
-	fstream in;
+	//Open the file
+	ifstream in;
 	in.open("tests.txt");
 
+	//Make sure the file isn't empty...
 	if(in.fail()) {
 		cout << "\nError while opening the file, cannot continue.";
 		cout << "\nApplication terminating...";
-		system("PAUSE");
+		std::system("PAUSE");
 		return 1;
 	}
 
-	while(in) {
-		// if (the next input is a left parenthesis)
+	do {
+		if (in.peek() == '(') { // the next input is a left parenthesis
 			// Read the left parenthesis and push it onto the stack
-		// else if (the next input is a number or other operand)
+			in >> symbol;
+			characters.push(symbol); 
+		} //else if (in.peek() == ) { // The next input is a number or other operand
 			// Read the operand and write it to the output
-		// else if (the next input is one of the operation symbols)
+		//} // else if (the next input is one of the operation symbols)
 			// do
 				// Print the top operation and pop it
 			// while none of these three conditions are true: 
@@ -53,10 +62,10 @@ int main(int argc, char **argv) {
 			// if (no left parenthesis is encountered)
 				// Print an error message indicating unbalanced parenthesis, and halt). 
 			// Pop the left parenthesis
-	}
+	} while (in && in.peek() != EOF);
 
 	in.close();
 
-	system("PAUSE");
+	std::system("PAUSE");
 	return 0;
 }
