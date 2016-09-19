@@ -6,16 +6,33 @@
 //also have not used any function or data-structure from the Standard-Template Library. I
 //understand that any violation of this disclaimer will result in a 0 for the project
 
-#include <string>
-#include <iostream>
-#include <fstream>
+// NOTE: This is the Stack from the book. You allowed us to use the stack from the book. This one is from pages
+//		370-371.
 
-using namespace std;
+#include <cstdlib>
 
+template <class Item>
 class Stack
 {
 public:
+	//Typedefs and member constants
+	typedef std::size_t size_type;
+	typedef Item value_type;
+	static const size_type CAPACITY = 30;
 
+	//The Stack Constructor
+	Stack() { used = 0;}
+
+	//Modifcation Member Functions
+	void push(const Item& entry);
+
+	void pop();
+
+	//Constant Member Functions
+	bool empty() const {return (used == 0); }
+
+	Item top() const;
 private:
-
+	Item data[CAPACITY];
+	size_type used;
 };
