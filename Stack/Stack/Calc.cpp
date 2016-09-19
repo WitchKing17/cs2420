@@ -18,6 +18,7 @@ void process_file(char*);
 int main(int argc, char **argv) {
 	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << " FILE" << endl;
+		return EXIT_FAILURE;
 	}
 
 	Stack<double> theStack;
@@ -67,10 +68,7 @@ void process_file(char* theFile) {
 	ifstream in;
 	in.open(theFile);
 
-	if(in.fail()) {
-		cout << "\nError while opening the file, cannot continue.\n";
-		cout << "\nApplication terminating...";
-		in.close();
-	} else
-		cout << "YAYYYY" << endl;
+	cout << "YAY" << endl;
+
+	in.close();
 }
