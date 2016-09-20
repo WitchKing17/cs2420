@@ -95,7 +95,7 @@ int main() {
 		}
 
 		//This while loop handles the condition for the end of the line. If we're at the end of the line,
-		//	we need to 
+		//	we need to print the last item from the stack and move on to the next line
 		while(!theStack.empty()) {
 			cout << theStack.top();
 			theStack.pop();
