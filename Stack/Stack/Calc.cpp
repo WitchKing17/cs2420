@@ -23,7 +23,7 @@ bool orderOfOperations(char, char);
 //The readFile function
 //Purpose: Allows for command line processing with a text file for this program
 //Parameters: The argument that is getting passed in
-//Returns: noen
+//Returns: none
 bool readFile(const char*);
 
 int main(int argc, char **argv) {
@@ -85,9 +85,8 @@ bool readFile(const char* theFile)
 	//Make sure the file isn't empty...
 	if(in.fail()) {
 		cout << "\nError while opening the file, cannot continue.";
-		cout << "\nApplication terminating...";
+		cout << "\nApplication terminating...\n";
 		in.close();
-		std::system("PAUSE");
 		return 1;
 	}
 
