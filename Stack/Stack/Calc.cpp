@@ -18,30 +18,74 @@ using namespace std;
 //Purpose: Function to determine which opcode or operator comes first. Determines the precedence
 //Parameters: The two opcodes we are comparing
 //Returns: True or false if op1 > op2, or op1 == op2
-bool orderOfOperations(char opcode1, char opcode2);
+bool orderOfOperations(char, char);
 
-// UNCOMMENT LINE 31 AND LINES 34-37 AND LINE 98 IF YOU WANT TO USE THE COMMAND LINE INSTEAD
+//The readFile function
+//Purpose: Allows for command line processing with a text file for this program
+//Parameters: The argument that is getting passed in
+//Returns: noen
+bool readFile(const char*);
 
-//int main(int argc, char **argv) {
-int main() {
+int main(int argc, char **argv) {
 	//If we want to use this on the command line, this if statement helps us with that
-	/*if (argc != 2) {
+	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << " FILE" << endl;
 		return EXIT_FAILURE;
-	}*/
+	}
 
-	//Declare the variables we need for the program
+	readFile(argv[1]);
+
+	std::system("PAUSE");
+	return 0;
+}
+
+bool orderOfOperations(char opcode1, char opcode2)
+{
+	//Placeholders
+	int value1 = -1;
+	int value2 = -2;
+
+	//Lines 123 - 136 Determine whether or not a certain operator comes before another or whether it is 'greater'
+	//		than another.
+
+	// OPCODE1 //
+	if (opcode1 == '+' || opcode1 == '-')
+		value1 = 1;
+	else if (opcode1 == '*' || opcode1 == '/')
+		value1 = 2;
+	else //Just in case we get an invalid character
+		return false;
+
+	// OPCODE2 //
+	if (opcode2 == '+' || opcode2 == '-')
+		value2 = 1;
+	else if (opcode2 == '+' || opcode2 == '-')
+		value2 = 2;
+	else //Just in case we get an invalid character
+		return false;
+
+	//Here is where we determine if one operator is greater than another
+	if (value1 == value2)
+		return true;
+	else if (value1 > value2)
+		return true;
+
+	return false;
+}
+
+bool readFile(const char* theFile)
+{
 	Stack<char> theStack;
 	string fileInput;
-
 	//Open the file
 	ifstream in;
-	in.open("tests.txt");
+	in.open(theFile);
 
 	//Make sure the file isn't empty...
 	if(in.fail()) {
 		cout << "\nError while opening the file, cannot continue.";
 		cout << "\nApplication terminating...";
+		in.close();
 		std::system("PAUSE");
 		return 1;
 	}
@@ -106,40 +150,5 @@ int main() {
 
 	cout << endl;
 
-	std::system("PAUSE");
-	return 0;
-}
-
-bool orderOfOperations(char opcode1, char opcode2)
-{
-	//Placeholders
-	int value1 = -1;
-	int value2 = -2;
-
-	//Lines 123 - 136 Determine whether or not a certain operator comes before another or whether it is 'greater'
-	//		than another.
-
-	// OPCODE1 //
-	if (opcode1 == '+' || opcode1 == '-')
-		value1 = 1;
-	else if (opcode1 == '*' || opcode1 == '/')
-		value1 = 2;
-	else //Just in case we get an invalid character
-		return false;
-
-	// OPCODE2 //
-	if (opcode2 == '+' || opcode2 == '-')
-		value2 = 1;
-	else if (opcode2 == '+' || opcode2 == '-')
-		value2 = 2;
-	else //Just in case we get an invalid character
-		return false;
-
-	//Here is where we determine if one operator is greater than another
-	if (value1 == value2)
-		return true;
-	else if (value1 > value2)
-		return true;
-
-	return false;
+	return true;
 }
