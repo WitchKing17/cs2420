@@ -8,8 +8,9 @@
 //understand that any violation of this disclaimer will result in a 0 for the project
 
 #include "Stack.h"
-#include <fstream>
-#include <iostream>
+#include <fstream> //for 'fstream'
+#include <iostream> //for 'cout'
+#include <string> //for 'string'
 
 using namespace std;
 
@@ -37,7 +38,7 @@ int main() {
 
 	//Declare the variables we need for the program
 	Stack<char> theStack;
-	char input;
+	string fileInput;
 
 	//Open the file
 	ifstream in;
@@ -51,51 +52,68 @@ int main() {
 		return 1;
 	}
 
-	do {
-		if (in.peek() == '(') { //The next input is a left parenthesis
-			//Read the left parenthesis and push it onto the stack
-			in >> input;
-			theStack.push(input); 
-		} else if (isdigit(in.peek())) { //The next input is a number or other operand
-			//Read the operand and write it to the output
-			in >> input;
-			cout << input << " ";
-		} else if (isOperator(in.peek())) { //The next input is one of the operation symbols
-			do { 
-				//Print the top operation and pop it
-				cout << theStack.top() << " ";
-				theStack.pop();
+	//I used these lines for testing, because I originally was using in.peek() instead of getline(), so this line
+	//		helped me figure out the rest of the program
+	//while (in) {
+	//	getline(in, fileInput);
+	//	cout << fileInput << endl;
+	//}
 
+	while (in) {
+		cout << endl;
+		getline(in, fileInput);
+
+		for(int i = 0; i < fileInput.length(); i++) {
+			if (fileInput[i] == '(') { //The next input is a left parenthesis
+				//Read the left parenthesis and push it onto the stack
+				theStack.push(fileInput[i]); 
+			} else if (isdigit(fileInput[i])) { //The next input is a number or other operand
+				//Read the operand and write it to the output
+				//in >> fileInput[i];
+				cout << fileInput[i] << " ";
+				//theStack.push(fileInput[i]);
+			} else if (isOperator(fileInput[i])) { //The next input is one of the operation symbols
 				//while none of these three conditions are true: 
 				//1. The stack becomes empty, or
 				//2. The next symbol on the stack is a left parenthesis, or
 				//3. The next symbol on the stack is an operation with lower precedence
-				//		than the next input symbol.
-			} while (theStack.top() != '(' && !theStack.empty() && orderOfOperations(theStack.top(), in.peek()));
-
-			//Read the next input symbol, and push this symbol onto the stack.
-			in >> input;
-			theStack.push(input);
-		} else {
-			//Read and discard the next input symbol (which should be a right parenthesis)
-			in >> input;
+				//		than the next input symbol
+				while (!theStack.empty() && theStack.top() != '(' && orderOfOperations(theStack.top(), fileInput[i])) {
+					//Print the top operation and pop it
+					cout << theStack.top() << " ";
+					theStack.pop();
+				}
+				
+				//Read the next input symbol, and push this symbol onto the stack.
+				//in >> fileInput[i];
+				theStack.push(fileInput[i]);
+			} else if (fileInput[i] == ')') { //Read and discard the next input symbol (which should be a right parenthesis)
+				//Print the top operation and pop it; keep printing and popping until the next symbol
+				//   on the stack is a left parenthesis.
+				while(!theStack.empty() && theStack.top() != '(') {
+					cout << theStack.top() << " ";
+					theStack.pop();
+				}
 			
-			//Print the top operation and pop it; keep printing and popping until the next symbol
-			//   on the stack is a left parenthesis.
-			while(!theStack.empty() && theStack.top() != '(') {
-				cout << theStack.top() << " ";
+				//if (no left parenthesis is encountered)
+					//Print an error message indicating unbalanced parenthesis, and halt. 
+			
+				//Pop the left parenthesis
 				theStack.pop();
 			}
-			
-			//if (no left parenthesis is encountered)
-				//Print an error message indicating unbalanced parenthesis, and halt). 
-			
-			//Pop the left parenthesis
+		}
+
+		//This while loop handles the condition for the end of the line. If we're at the end of the line,
+		//	we need to 
+		while(!theStack.empty()) {
+			cout << theStack.top();
 			theStack.pop();
 		}
-	} while (in.good() && in.peek() != EOF);
+	} 
 
 	in.close();
+
+	cout << endl;
 
 	std::system("PAUSE");
 	return 0;
@@ -138,6 +156,7 @@ bool orderOfOperations(char opcode1, char opcode2)
 		weight2 = 2;
 	}
 
+	//Here is where we determine if one operator is greater than another
 	if (weight1 == weight2)
 		return true;
 	else if (weight1 > weight2)
