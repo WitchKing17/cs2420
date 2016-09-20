@@ -32,6 +32,8 @@ public:
 	//Constant Member Functions
 	bool empty() const {return (used == 0); }
 
+	size_type size() const {return used;}
+
 	Item top() const;
 private:
 	Item data[CAPACITY];
