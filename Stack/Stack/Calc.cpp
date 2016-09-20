@@ -8,7 +8,7 @@
 //understand that any violation of this disclaimer will result in a 0 for the project
 
 #include "Stack.h"
-#include <fstream> //for 'fstream'
+#include <fstream> //for 'ifstream'
 #include <iostream> //for 'cout'
 #include <string> //for 'string'
 
@@ -77,6 +77,7 @@ bool readFile(const char* theFile)
 {
 	Stack<char> theStack;
 	string fileInput;
+
 	//Open the file
 	ifstream in;
 	in.open(theFile);
