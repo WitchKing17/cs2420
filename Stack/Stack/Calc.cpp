@@ -14,16 +14,10 @@
 
 using namespace std;
 
-//The isOperator function
-//Purpose: Helper function for our main function to determine if the next character in the string is a symbol
-//Parameters: The character we want to check
-//Returns: true or false
-bool isOperator(char o);
-
 //The orderOfOperations function
 //Purpose: Function to determine which opcode or operator comes first. Determines the precedence
 //Parameters: The two opcodes we are comparing
-//Returns: True or false if op1 > op2
+//Returns: True or false if op1 > op2, or op1 == op2
 bool orderOfOperations(char opcode1, char opcode2);
 
 // UNCOMMENT LINE 31 AND LINES 34-37 AND LINE 98 IF YOU WANT TO USE THE COMMAND LINE INSTEAD
@@ -59,7 +53,7 @@ int main() {
 	//	cout << fileInput << endl;
 	//}
 
-	while (in) {
+	while (in.good() && in.peek() != EOF) {
 		cout << endl;
 		getline(in, fileInput);
 
@@ -69,10 +63,8 @@ int main() {
 				theStack.push(fileInput[i]); 
 			} else if (isdigit(fileInput[i])) { //The next input is a number or other operand
 				//Read the operand and write it to the output
-				//in >> fileInput[i];
 				cout << fileInput[i] << " ";
-				//theStack.push(fileInput[i]);
-			} else if (isOperator(fileInput[i])) { //The next input is one of the operation symbols
+			} else if (fileInput[i] == '+' || fileInput[i] == '-' || fileInput[i] == '*' || fileInput[i] == '/') { //The next input is one of the operation symbols
 				//while none of these three conditions are true: 
 				//1. The stack becomes empty, or
 				//2. The next symbol on the stack is a left parenthesis, or
@@ -85,18 +77,17 @@ int main() {
 				}
 				
 				//Read the next input symbol, and push this symbol onto the stack.
-				//in >> fileInput[i];
 				theStack.push(fileInput[i]);
 			} else if (fileInput[i] == ')') { //Read and discard the next input symbol (which should be a right parenthesis)
 				//Print the top operation and pop it; keep printing and popping until the next symbol
 				//   on the stack is a left parenthesis.
 				while(!theStack.empty() && theStack.top() != '(') {
+					//if (no left parenthesis is encountered)
+						//Print an error message indicating unbalanced parenthesis, and halt. 
+					
 					cout << theStack.top() << " ";
 					theStack.pop();
 				}
-			
-				//if (no left parenthesis is encountered)
-					//Print an error message indicating unbalanced parenthesis, and halt. 
 			
 				//Pop the left parenthesis
 				theStack.pop();
@@ -119,47 +110,35 @@ int main() {
 	return 0;
 }
 
-bool isOperator(char o) 
-{
-	//Check if we have MDAS (PEMDAS). 
-	if (o == '+' || o == '-' || o == '*' || o == '/') {
-		return true;
-	}
-
-	return false;
-}
-
 bool orderOfOperations(char opcode1, char opcode2)
 {
-	int weight1 = -1;
-	int weight2 = -2;
+	//Placeholders
+	int value1 = -1;
+	int value2 = -2;
 
-	//These switch statements give certain operations their order, so we can make sure we're performing operations in
-	//	the correct order.
-	switch(opcode1) 
-	{
-	case '+':
-	case '-':
-		weight1 = 1;
-	case '*':
-	case '/':
-		weight1 = 2;
-	}
+	//Lines 123 - 136 Determine whether or not a certain operator comes before another or whether it is 'greater'
+	//		than another.
 
-	switch(opcode2) 
-	{
-	case '+':
-	case '-':
-		weight2 = 1;
-	case'*':
-	case '/':
-		weight2 = 2;
-	}
+	// OPCODE1 //
+	if (opcode1 == '+' || opcode1 == '-')
+		value1 = 1;
+	else if (opcode1 == '*' || opcode1 == '/')
+		value1 = 2;
+	else //Just in case we get an invalid character
+		return false;
+
+	// OPCODE2 //
+	if (opcode2 == '+' || opcode2 == '-')
+		value2 = 1;
+	else if (opcode2 == '+' || opcode2 == '-')
+		value2 = 2;
+	else //Just in case we get an invalid character
+		return false;
 
 	//Here is where we determine if one operator is greater than another
-	if (weight1 == weight2)
+	if (value1 == value2)
 		return true;
-	else if (weight1 > weight2)
+	else if (value1 > value2)
 		return true;
 
 	return false;
