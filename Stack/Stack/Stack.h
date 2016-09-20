@@ -45,6 +45,8 @@ template <class Item>
 void Stack<Item>::push(const Item& entry)
 {
 	assert(size() < CAPACITY);
+	data[used] = entry;
+	++used;
 }
 
 template <class Item>
