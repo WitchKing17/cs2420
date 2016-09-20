@@ -45,7 +45,7 @@ bool orderOfOperations(char opcode1, char opcode2)
 	int value1 = -1;
 	int value2 = -2;
 
-	//Lines 123 - 136 Determine whether or not a certain operator comes before another or whether it is 'greater'
+	//Lines 52 - 65 Determine whether or not a certain operator comes before another or whether it is 'greater'
 	//		than another.
 
 	// OPCODE1 //
@@ -75,6 +75,7 @@ bool orderOfOperations(char opcode1, char opcode2)
 
 bool readFile(const char* theFile)
 {
+	//Declare local variables
 	Stack<char> theStack;
 	string fileInput;
 
