@@ -26,6 +26,12 @@ bool orderOfOperations(char, char);
 //Returns: none
 bool readFile(const char*);
 
+//The evaluate function
+//Purpose: Evalutes our postfix expression
+//Parameters: The two integers we are going to evaluate, with the character we want as well.
+//Returns: The value of the postfix expression
+int evaluate(int, int, char);
+
 int main(int argc, char **argv) {
 	//If we want to use this on the command line, this if statement helps us with that
 	if (argc != 2) {
@@ -73,10 +79,20 @@ bool orderOfOperations(char opcode1, char opcode2)
 	return false;
 }
 
+int evaluate(int op1, int op2, char ch) {
+	switch (ch) {
+	case '+': return op1 + op2;
+	case '-': return op1 - op2;
+	case '*': return op1 * op2;
+	case '/': return op1 / op2;
+	default: return 0;
+	}
+}
+
 bool readFile(const char* theFile)
 {
 	//Declare local variables
-	Stack<char> theStack;
+	Stack<char> infix;
 	string fileInput;
 
 	//Open the file
@@ -99,52 +115,70 @@ bool readFile(const char* theFile)
 	//}
 
 	while (in.good() && in.peek() != EOF) {
-		cout << endl;
+		Stack<char> postfix;
+		Stack<int> results;
 		getline(in, fileInput);
 
 		for(int i = 0; i < fileInput.length(); i++) {
 			if (fileInput[i] == '(') { //The next input is a left parenthesis
 				//Read the left parenthesis and push it onto the stack
-				theStack.push(fileInput[i]); 
+				infix.push(fileInput[i]); 
 			} else if (isdigit(fileInput[i])) { //The next input is a number or other operand
 				//Read the operand and write it to the output
-				cout << fileInput[i] << " ";
+				//cout << fileInput[i] << " ";
+				postfix.push(fileInput[i]);
 			} else if (fileInput[i] == '+' || fileInput[i] == '-' || fileInput[i] == '*' || fileInput[i] == '/') { //The next input is one of the operation symbols
 				//while none of these three conditions are true: 
 				//1. The stack becomes empty, or
 				//2. The next symbol on the stack is a left parenthesis, or
 				//3. The next symbol on the stack is an operation with lower precedence
 				//		than the next input symbol
-				while (!theStack.empty() && theStack.top() != '(' && orderOfOperations(theStack.top(), fileInput[i])) {
+				while (!infix.empty() && infix.top() != '(' && orderOfOperations(infix.top(), fileInput[i])) {
 					//Print the top operation and pop it
-					cout << theStack.top() << " ";
-					theStack.pop();
+					postfix.push(infix.top());
+					infix.pop();
 				}
 				
 				//Read the next input symbol, and push this symbol onto the stack.
-				theStack.push(fileInput[i]);
+				infix.push(fileInput[i]);
 			} else if (fileInput[i] == ')') { //Read and discard the next input symbol (which should be a right parenthesis)
 				//Print the top operation and pop it; keep printing and popping until the next symbol
 				//   on the stack is a left parenthesis.
-				while(!theStack.empty() && theStack.top() != '(') {
+				while(!infix.empty() && infix.top() != '(') {
 					//if (no left parenthesis is encountered)
 						//Print an error message indicating unbalanced parenthesis, and halt. 
 					
-					cout << theStack.top() << " ";
-					theStack.pop();
+					postfix.push(infix.top());
+					infix.pop();
 				}
 			
 				//Pop the left parenthesis
-				theStack.pop();
+				infix.pop();
 			}
 		}
 
 		//This while loop handles the condition for the end of the line. If we're at the end of the line,
 		//	we need to print the last item from the stack and move on to the next line
-		while(!theStack.empty()) {
-			cout << theStack.top();
-			theStack.pop();
+		while(!infix.empty()) {
+			postfix.push(infix.top());
+			infix.pop();
 		}
+		
+		while (!postfix.empty()) {
+			if(isdigit(postfix.top())) {
+				results.push(postfix.top());
+				postfix.pop();
+			} else {
+				int op1 = results.top();
+				results.pop();
+				int op2 = results.top();
+				results.pop();
+				results.push(evaluate(op1, op2, postfix.top()));
+				postfix.pop();
+			}
+		}
+
+		cout << results.top();
 	} 
 
 	in.close();
