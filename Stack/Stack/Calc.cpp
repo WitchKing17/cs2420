@@ -93,6 +93,8 @@ bool readFile(const char* theFile)
 {
 	//Declare local variables
 	Stack<char> infix;
+	Stack<char> postfix;
+	Stack<int> result;
 	string fileInput;
 
 	//Open the file
@@ -115,8 +117,7 @@ bool readFile(const char* theFile)
 	//}
 
 	while (in.good() && in.peek() != EOF) {
-		Stack<char> postfix;
-		Stack<int> results;
+		cout << endl;
 		getline(in, fileInput);
 
 		for(int i = 0; i < fileInput.length(); i++) {
@@ -125,7 +126,6 @@ bool readFile(const char* theFile)
 				infix.push(fileInput[i]); 
 			} else if (isdigit(fileInput[i])) { //The next input is a number or other operand
 				//Read the operand and write it to the output
-				//cout << fileInput[i] << " ";
 				postfix.push(fileInput[i]);
 			} else if (fileInput[i] == '+' || fileInput[i] == '-' || fileInput[i] == '*' || fileInput[i] == '/') { //The next input is one of the operation symbols
 				//while none of these three conditions are true: 
@@ -163,22 +163,37 @@ bool readFile(const char* theFile)
 			postfix.push(infix.top());
 			infix.pop();
 		}
-		
+
+		Stack<char> temp;
+
+		//This while loop reverses the postfix stack, because for some reason it put it in reverse order, so we need
+		//	to get it back to be able to calculate things correctly
 		while (!postfix.empty()) {
-			if(isdigit(postfix.top())) {
-				results.push(postfix.top());
-				postfix.pop();
+			char item = postfix.top();
+			postfix.pop();
+			temp.push(item);
+		}
+
+		//This is where we do the calculations
+		while(!temp.empty()) {
+			if(isdigit(temp.top())) {
+				char item = temp.top();
+				int i = item - '0';
+				result.push(i);
+				temp.pop();
 			} else {
-				int op1 = results.top();
-				results.pop();
-				int op2 = results.top();
-				results.pop();
-				results.push(evaluate(op1, op2, postfix.top()));
-				postfix.pop();
+				int tempInt = result.top();
+				result.pop();
+				int op1 = result.top();
+				result.pop();
+				int op2 = tempInt;
+				int ans = evaluate(op1, op2, temp.top());
+				result.push(ans);
+				temp.pop();
 			}
 		}
 
-		cout << results.top();
+		cout << result.top();
 	} 
 
 	in.close();
