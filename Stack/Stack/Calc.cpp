@@ -120,6 +120,9 @@ bool readFile(const char* theFile)
 		cout << endl;
 		getline(in, fileInput);
 
+		if (fileInput == "")
+			continue;
+
 		for(int i = 0; i < fileInput.length(); i++) {
 			if (fileInput[i] == '(') { //The next input is a left parenthesis
 				//Read the left parenthesis and push it onto the stack
